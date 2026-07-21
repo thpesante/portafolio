@@ -1,46 +1,56 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import ProjectCard from './components/ProjectCard.vue'
 import SkillSphere from './components/SkillSphere.vue'
 import CodeTerminal from './components/CodeTerminal.vue'
 import BentoDashboard from './components/BentoDashboard.vue'
-import { Mail, MapPin, Send, Terminal, Layers, Phone, Info } from '@lucide/vue'
+import { Mail, MapPin, Send, Terminal, Layers, Phone, Info, Globe, Languages } from '@lucide/vue'
+import { ts, currentLang, toggleLang } from './i18n'
+
+import taxiImg from './assets/taxiamigoweb.png'
+import yaloImg from './assets/yalopidoweb.png'
+import terminalImg from './assets/terminal.png'
 
 const currentYear = new Date().getFullYear()
 
-const projects = ref([
+const projects = computed(() => [
   {
     id: 'taxi-amigo',
-    title: 'Taxi Amigo',
-    description: 'Aplicación móvil y plataforma web para la gestión eficiente y segura del transporte.',
-    longDescription: 'Taxi Amigo es un ecosistema tecnológico completo desarrollado para optimizar la gestión de flotas y viajes de transporte. Ofrece una aplicación móvil nativa para conductores y pasajeros, y un panel de control administrativo web para gestionar operaciones en tiempo real.',
-    techs: ['Kotlin', 'Firebase', 'React', 'TypeScript', 'Vercel', 'Firestore', 'Realtime Database'],
-    features: ['Inicio de Sesión y Autenticación segura', 'Registro detallado de conductores y pasajeros', 'Gestión de perfiles de usuario', 'Geolocalización en tiempo real con Mapas', 'Panel administrativo con reportes y analíticas'],
+    titleKey: 'taxiTitle',
+    descKey: 'taxiDesc',
+    longDescKey: 'taxiLongDesc',
+    featuresKey: 'taxiFeatures',
+    techs: ['Kotlin', 'Java', 'React', 'TypeScript', 'Supabase', 'Firebase', 'Vercel'],
     type: 'both' as const,
     gradient: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
-    role: 'Desarrollador Full Stack & Android'
+    roleKey: 'taxiRole',
+    image: taxiImg,
+    playStoreUrl: 'https://play.google.com/store/apps'
   },
   {
     id: 'ya-lo-pido',
-    title: 'Ya Lo Pido',
-    description: 'Aplicación de delivery ágil que conecta usuarios, restaurantes y repartidores en tiempo real.',
-    longDescription: 'Ya Lo Pido es una plataforma de comercio local y entrega a domicilio. Cuenta con flujos dedicados para la visualización de menús, procesamiento de pedidos en tiempo real, comunicación por chat entre el cliente y el repartidor, y control total desde la consola de administración.',
-    techs: ['Kotlin', 'React', 'Firebase', 'TypeScript', 'Realtime Database', 'Firebase Authentication'],
-    features: ['Directorio interactivo de Restaurantes', 'Gestión de Pedidos en tiempo real', 'Gestión y asignación automática de repartidores', 'Panel administrativo para comercios', 'Pasarela de pagos y facturación integrada'],
-    type: 'mobile' as const,
+    titleKey: 'yaloTitle',
+    descKey: 'yaloDesc',
+    longDescKey: 'yaloLongDesc',
+    featuresKey: 'yaloFeatures',
+    techs: ['Kotlin', 'Java', 'React', 'TypeScript', 'PayPhone', 'FCM', 'Firebase'],
+    type: 'both' as const,
     gradient: 'linear-gradient(135deg, #d946ef 0%, #6366f1 100%)',
-    role: 'Desarrollador Android & Integrador Frontend'
+    roleKey: 'yaloRole',
+    image: yaloImg
   },
   {
     id: 'terminal-ecuador',
-    title: 'Terminal Ecuador',
-    description: 'Sistema web centralizado para la administración y control de operaciones de transporte terrestre.',
-    longDescription: 'Terminal Ecuador es una solución web a gran escala diseñada para digitalizar la venta de pasajes, control de andenes y reportes administrativos en terminales terrestres. Se integra con base de datos en la nube de alta disponibilidad para asegurar transacciones en milisegundos.',
-    techs: ['React', 'TypeScript', 'Firebase', 'Vercel', 'Firestore', 'Firebase Auth', 'PayPhone API'],
-    features: ['Dashboard administrativo de ventas y andenes', 'Integración de pasarela de pagos con PayPhone', 'Control de accesos y roles de operadores', 'Módulo de reportería automatizada', 'Sincronización en la nube con Firestore'],
+    titleKey: 'terminalTitle',
+    descKey: 'terminalDesc',
+    longDescKey: 'terminalLongDesc',
+    featuresKey: 'terminalFeatures',
+    techs: ['React', 'TypeScript', 'Vite', 'Supabase', 'PayPhone API', 'Vercel'],
     type: 'web' as const,
     gradient: 'linear-gradient(135deg, #06b6d4 0%, #10b981 100%)',
-    role: 'Desarrollador Frontend Principal'
+    roleKey: 'terminalRole',
+    image: terminalImg,
+    webUrl: 'https://portafoliogit.vercel.app'
   }
 ])
 
@@ -54,7 +64,6 @@ const isSent = ref(false)
 const handleContactSubmit = (e: Event) => {
   e.preventDefault()
   isSending.value = true
-  // Mock API call
   setTimeout(() => {
     isSending.value = false
     isSent.value = true
@@ -115,10 +124,16 @@ onMounted(() => {
           <span>Johnny P.</span>
         </a>
         <div class="nav-links">
-          <a href="#dashboard" class="nav-link">Perfil</a>
-          <a href="#projects" class="nav-link">Proyectos</a>
-          <a href="#skills" class="nav-link">Habilidades</a>
-          <a href="#contact" class="nav-link">Contacto</a>
+          <a href="#dashboard" class="nav-link">{{ ts('navProfile') }}</a>
+          <a href="#projects" class="nav-link">{{ ts('navProjects') }}</a>
+          <a href="#skills" class="nav-link">{{ ts('navSkills') }}</a>
+          <a href="#contact" class="nav-link">{{ ts('navContact') }}</a>
+
+          <!-- Language Toggle Button -->
+          <button @click="toggleLang" class="lang-toggle-btn" :title="currentLang === 'es' ? 'Switch to English' : 'Cambiar a Español'">
+            <Languages class="lang-icon" />
+            <span class="lang-code">{{ currentLang.toUpperCase() }}</span>
+          </button>
         </div>
       </div>
     </nav>
@@ -130,26 +145,26 @@ onMounted(() => {
         <div class="container hero-container">
           <div class="hero-content">
             <div class="hero-intro reveal active">
-              <span class="intro-badge">DESARROLLADOR WEB & MÓVIL</span>
-              <h1 class="hero-name">JOHNNY PESÁNTEZ RÍOS</h1>
+              <span class="intro-badge">{{ ts('heroBadge') }}</span>
+              <h1 class="hero-name">{{ ts('heroName') }}</h1>
               <div class="subtitle-wrap">
-                <span class="role-text text-gradient">Full Stack Developer</span>
+                <span class="role-text text-gradient">{{ ts('heroRole1') }}</span>
                 <span class="divider">|</span>
-                <span class="role-text text-gradient">Android Developer</span>
+                <span class="role-text text-gradient">{{ ts('heroRole2') }}</span>
                 <span class="divider">|</span>
-                <span class="role-text text-gradient">React Developer</span>
+                <span class="role-text text-gradient">{{ ts('heroRole3') }}</span>
               </div>
               <p class="hero-bio">
-                Especializado en la creación y mantenimiento de software comercial. Desarrollo de aplicaciones Android nativas robustas con Kotlin y Java, así como plataformas web dinámicas en React e integraciones backend en la nube con Firebase y Supabase.
+                {{ ts('heroBio') }}
               </p>
               
               <div class="hero-actions">
                 <a href="#dashboard" class="glow-btn glow-btn-primary">
-                  Explorar Perfil
+                  {{ ts('heroBtn1') }}
                   <Terminal class="btn-icon" />
                 </a>
                 <a href="#projects" class="glow-btn">
-                  Ver Proyectos
+                  {{ ts('heroBtn2') }}
                   <Layers class="btn-icon" />
                 </a>
               </div>
@@ -162,7 +177,7 @@ onMounted(() => {
       <section id="dashboard" class="dashboard-section">
         <div class="container">
           <div class="section-header">
-            <h2 class="section-title reveal">Dashboard Profesional</h2>
+            <h2 class="section-title reveal">{{ ts('dashTitle') }}</h2>
           </div>
           
           <div class="bento-grid">
@@ -175,10 +190,10 @@ onMounted(() => {
             <div class="bento-card col-span-7 reveal glass-panel bento-pad">
               <div class="bento-card-header">
                 <Info class="bento-header-icon" />
-                <h3>Objetivo Laboral</h3>
+                <h3>{{ ts('objectiveTitle') }}</h3>
               </div>
               <p class="objective-text">
-                Desarrollar mi formación y experiencia en una empresa que ofrezca nuevas perspectivas y cualidades en las cuales pueda explorar y mejorar profesionalmente, así como también fomentar el compañerismo y el trabajo en equipo de alto rendimiento.
+                {{ ts('objectiveText') }}
               </p>
             </div>
             
@@ -188,22 +203,22 @@ onMounted(() => {
                 <a href="mailto:alexandropesantez@gmail.com" class="quick-contact-item">
                   <Mail class="quick-icon" />
                   <div>
-                    <span>Escríbeme</span>
+                    <span>{{ ts('writeMe') }}</span>
                     <strong>alexandropesantez@gmail.com</strong>
                   </div>
                 </a>
                 <a href="tel:0987734415" class="quick-contact-item">
                   <Phone class="quick-icon" />
                   <div>
-                    <span>Llamadas / WhatsApp</span>
-                    <strong>098 773 4415</strong>
+                    <span>{{ ts('callWhatsapp') }}</span>
+                    <strong>+593 98 773 4415</strong>
                   </div>
                 </a>
                 <div class="quick-contact-item col-span-2-mobile">
                   <MapPin class="quick-icon" />
                   <div>
-                    <span>Ubicación</span>
-                    <strong>Santa Isabel, Azuay, Ecuador</strong>
+                    <span>{{ ts('location') }}</span>
+                    <strong>{{ ts('locationValue') }}</strong>
                   </div>
                 </div>
               </div>
@@ -221,7 +236,7 @@ onMounted(() => {
       <section id="projects" class="projects-section">
         <div class="container">
           <div class="section-header">
-            <h2 class="section-title reveal">Proyectos Destacados</h2>
+            <h2 class="section-title reveal">{{ ts('projectsTitle') }}</h2>
           </div>
           
           <div class="projects-grid reveal">
@@ -238,7 +253,7 @@ onMounted(() => {
       <section id="skills" class="skills-section">
         <div class="container">
           <div class="section-header">
-            <h2 class="section-title reveal">Habilidades Técnicas</h2>
+            <h2 class="section-title reveal">{{ ts('skillsTitle') }}</h2>
           </div>
           
           <div class="reveal">
@@ -251,46 +266,53 @@ onMounted(() => {
       <section id="contact" class="contact-section">
         <div class="container">
           <div class="section-header">
-            <h2 class="section-title reveal">Enviar Mensaje</h2>
+            <h2 class="section-title reveal">{{ ts('contactTitle') }}</h2>
           </div>
           
           <div class="contact-grid reveal">
             <!-- Info Card -->
             <div class="contact-info-panel glass-panel">
-              <h3>¿Colaboramos en un nuevo proyecto?</h3>
-              <p>Estoy disponible para consultorías, desarrollo de software a medida, aplicaciones móviles Android nativas o integraciones de backend en la nube.</p>
+              <h3>{{ ts('contactHeading') }}</h3>
+              <p>{{ ts('contactDesc') }}</p>
               
               <div class="contact-details">
                 <div class="detail-item">
                   <Mail class="detail-icon" />
                   <div>
-                    <h4>Correo Electrónico</h4>
+                    <h4>{{ ts('contactEmail') }}</h4>
                     <a href="mailto:alexandropesantez@gmail.com">alexandropesantez@gmail.com</a>
                   </div>
                 </div>
                 <div class="detail-item">
                   <Phone class="detail-icon" />
                   <div>
-                    <h4>Teléfono</h4>
-                    <a href="tel:0987734415">098 773 4415</a>
+                    <h4>{{ ts('contactPhone') }}</h4>
+                    <a href="tel:+593987734415">+593 98 773 4415</a>
                   </div>
                 </div>
                 <div class="detail-item">
                   <MapPin class="detail-icon" />
                   <div>
-                    <h4>Dirección</h4>
-                    <span>Panamericana sur km 12, Santa Isabel, Ecuador</span>
+                    <h4>{{ ts('contactAddress') }}</h4>
+                    <span>{{ ts('contactAddressValue') }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <Globe class="detail-icon" />
+                  <div>
+                    <h4>{{ ts('contactPortfolio') }}</h4>
+                    <a href="https://portafoliogit.vercel.app" target="_blank">portafoliogit.vercel.app</a>
                   </div>
                 </div>
               </div>
 
               <!-- Social Links -->
               <div class="social-links">
-                <a href="https://github.com" target="_blank" class="social-icon-btn" aria-label="GitHub">
+                <a href="https://github.com/thpesante" target="_blank" class="social-icon-btn" aria-label="GitHub" title="GitHub Profile">
                   <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="social-icon"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
                 </a>
-                <a href="https://linkedin.com" target="_blank" class="social-icon-btn" aria-label="LinkedIn">
-                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="social-icon"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                <a href="https://portafoliogit.vercel.app" target="_blank" class="social-icon-btn" aria-label="Portafolio" title="Portafolio Vercel">
+                  <Globe width="20" height="20" class="social-icon" />
                 </a>
               </div>
             </div>
@@ -299,46 +321,46 @@ onMounted(() => {
             <div class="contact-form-panel glass-panel">
               <form @submit="handleContactSubmit">
                 <div class="form-group">
-                  <label for="name">Nombre</label>
+                  <label for="name">{{ ts('labelName') }}</label>
                   <input 
                     type="text" 
                     id="name" 
                     v-model="formName" 
                     required 
-                    placeholder="Tu nombre completo"
+                    :placeholder="ts('placeholderName')"
                     class="form-input"
                   />
                 </div>
                 
                 <div class="form-group">
-                  <label for="email">Correo Electrónico</label>
+                  <label for="email">{{ ts('labelEmail') }}</label>
                   <input 
                     type="email" 
                     id="email" 
                     v-model="formEmail" 
                     required 
-                    placeholder="tucorreo@ejemplo.com"
+                    :placeholder="ts('placeholderEmail')"
                     class="form-input"
                   />
                 </div>
                 
                 <div class="form-group">
-                  <label for="message">Mensaje</label>
+                  <label for="message">{{ ts('labelMessage') }}</label>
                   <textarea 
                     id="message" 
                     v-model="formMessage" 
                     required 
                     rows="5"
-                    placeholder="Cuéntame sobre tu proyecto..."
+                    :placeholder="ts('placeholderMessage')"
                     class="form-input"
                   ></textarea>
                 </div>
                 
                 <button type="submit" class="glow-btn glow-btn-primary btn-submit" :disabled="isSending">
-                  <span v-if="isSending">Enviando...</span>
-                  <span v-else-if="isSent" class="sent-success">¡Enviado con éxito!</span>
+                  <span v-if="isSending">{{ ts('sending') }}</span>
+                  <span v-else-if="isSent" class="sent-success">{{ ts('sent') }}</span>
                   <span v-else>
-                    Enviar Mensaje
+                    {{ ts('sendMessage') }}
                     <Send class="btn-icon" />
                   </span>
                 </button>
@@ -352,7 +374,7 @@ onMounted(() => {
     <!-- FOOTER -->
     <footer class="footer-panel">
       <div class="container footer-content">
-        <p>&copy; {{ currentYear }} Johnny Pesántez Ríos. Diseñado con Vue 3, Bento Grids y Micro-Líquido.</p>
+        <p>&copy; {{ currentYear }} Johnny Pesántez Ríos. {{ ts('footerText') }}</p>
       </div>
     </footer>
   </div>
@@ -548,6 +570,34 @@ a.quick-contact-item:hover .quick-icon {
 .nav-link:hover {
   color: var(--text-primary);
   transform: translateY(-1px);
+}
+
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--color-cyan);
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.78rem;
+  transition: all 0.3s ease;
+}
+
+.lang-toggle-btn:hover {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: var(--color-cyan);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+  transform: scale(1.05);
+}
+
+.lang-icon {
+  width: 14px;
+  height: 14px;
 }
 
 /* Hero Section */

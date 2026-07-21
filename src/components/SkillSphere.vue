@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { Monitor, Server, Smartphone, Wrench, Users } from '@lucide/vue'
-import { ts, currentLang } from '../i18n'
+import { ts } from '../i18n'
 
 interface Skill {
   name: string

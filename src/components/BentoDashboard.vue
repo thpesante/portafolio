@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { Briefcase, GraduationCap, Users, User, CheckCircle2, Mail, Phone, MapPin, Award, Globe } from '@lucide/vue'
-import { ts, ta, currentLang } from '../i18n'
+import { ts, ta } from '../i18n'
 
 const activeTab = ref<'work' | 'education' | 'references' | 'personal'>('work')
 
