@@ -1,64 +1,83 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Monitor, Server, Smartphone, Award } from '@lucide/vue'
+import { ref, computed } from 'vue'
+import { Monitor, Server, Smartphone, Wrench, Users } from '@lucide/vue'
+import { ts, currentLang } from '../i18n'
 
 interface Skill {
   name: string
-  color: string // CSS color value for customized glow
+  color: string
 }
 
 interface SkillCategory {
-  title: string
+  titleKey: string
   icon: any
   skills: Skill[]
 }
 
-const categories = ref<SkillCategory[]>([
+const rawCategories: SkillCategory[] = [
   {
-    title: 'Frontend',
+    titleKey: 'catFrontend',
     icon: Monitor,
     skills: [
       { name: 'React', color: '#06b6d4' },
-      { name: 'Vue 3', color: '#10b981' },
       { name: 'TypeScript', color: '#3178c6' },
+      { name: 'JavaScript', color: '#f7df1e' },
+      { name: 'Vite', color: '#bd34fe' },
       { name: 'HTML5', color: '#e34f26' },
-      { name: 'CSS3', color: '#1572b6' },
-      { name: 'Vite', color: '#bd34fe' }
+      { name: 'CSS3', color: '#1572b6' }
     ]
   },
   {
-    title: 'Mobile',
+    titleKey: 'catMobile',
     icon: Smartphone,
     skills: [
-      { name: 'Kotlin', color: '#7f52ff' },
       { name: 'Java', color: '#f89820' },
-      { name: 'Android Studio', color: '#3ddc84' },
-      { name: 'Material Design', color: '#00f2fe' }
+      { name: 'Kotlin', color: '#7f52ff' },
+      { name: 'Android Studio', color: '#3ddc84' }
     ]
   },
   {
-    title: 'Backend',
+    titleKey: 'catBackend',
     icon: Server,
     skills: [
       { name: 'Firebase', color: '#ffca28' },
       { name: 'Supabase', color: '#3ecf8e' },
-      { name: 'Firestore', color: '#ffa000' },
-      { name: 'Realtime DB', color: '#ff8f00' },
-      { name: 'REST API', color: '#0284c7' },
-      { name: 'Firebase Auth', color: '#f59e0b' }
+      { name: 'PostgreSQL', color: '#336791' },
+      { name: 'SQL', color: '#0284c7' },
+      { name: 'REST API', color: '#06b6d4' }
     ]
   },
   {
-    title: 'Herramientas y Otros',
-    icon: Award,
+    titleKey: 'catTools',
+    icon: Wrench,
     skills: [
       { name: 'Git', color: '#f05032' },
       { name: 'GitHub', color: '#f5f5f7' },
       { name: 'Vercel', color: '#ffffff' },
-      { name: 'PayPhone API', color: '#ea580c' }
+      { name: 'FCM', color: '#ff9800' },
+      { name: 'PayPhone', color: '#ea580c' },
+      { name: 'Microsoft Office', color: '#d83b01' }
+    ]
+  },
+  {
+    titleKey: 'catOther',
+    icon: Users,
+    skills: [
+      { name: 'Soporte Técnico', color: '#8b5cf6' },
+      { name: 'Redes', color: '#06b6d4' },
+      { name: 'Hardware', color: '#10b981' },
+      { name: 'Trabajo en Equipo', color: '#ec4899' }
     ]
   }
-])
+]
+
+const categories = computed(() =>
+  rawCategories.map(c => ({
+    title: ts(c.titleKey),
+    icon: c.icon,
+    skills: c.skills
+  }))
+)
 
 const activeCategoryIndex = ref<number | null>(null)
 </script>
